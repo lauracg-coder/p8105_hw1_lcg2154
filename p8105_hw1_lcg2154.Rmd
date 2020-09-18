@@ -1,0 +1,80 @@
+---
+title: "Homework 1"
+author: Laura Gomez
+class: P8105 Data Science
+output: github_document
+---
+
+This is my solution to HW 1.
+
+```{r}
+library(tidyverse)
+```
+
+# Problem 1
+
+Create a data frame with the specified elements from a standard _normal_distribution_. 
+
+```{r create_df}
+prob1_df =
+  tibble(
+    samp = rnorm(10),
+    samp_gt_0 = samp > 0,
+    char_vec = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+    factor_vec = factor(c("low", "low", "low", "mod", "mod", "mod", "mod", "high", "high", "high" ))
+  )
+```
+
+Take the mean of each variable in my data frame. 
+
+```{r mean_pull_var}
+mean(pull(prob1_df, samp))
+mean(pull(prob1_df, samp_gt_0))
+mean(pull(prob1_df, char_vec))
+mean(pull(prob1_df, factor_vec))
+```
+
+I can take the mean of numbers and logical but not of characters or factors. 
+
+```{r try_numeric}
+as.numeric(pull(prob1_df, samp))
+as.numeric(pull(prob1_df, samp_gt_0))
+as.numeric(pull(prob1_df, char_vec))
+as.numeric(pull(prob1_df, factor_vec))
+```
+
+I successfully took the mean of each numerical variable in the data set. 
+
+```{r}
+as.numeric(pull(prob1_df, samp_gt_0)) * pull(prob1_df, samp)
+```
+
+# Problem 2
+
+Start by loading the data set, **penguins**. 
+
+```{r}
+data("penguins", package = "palmerpenguins")
+```
+
+The **penguins** data set has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean flipper length is `r mean(penguins$flipper_length_mm, trim = 0, na.rm = TRUE)`. The data contains the following: 
+
+  + The **penguins** data set has the following labels: `r ls(penguins)`.
+  + The values for the **species** are  `r levels(penguins$species)` with the following:
+  + The values for the **Bill_Length** are `r summary(penguins$bill_length_mm)`mm. The mean is `r mean(penguins$bill_length_mm, trim = 0, na.rm = TRUE)` and median is `r median(penguins$bill_length_mm, trim = 0, na.rm = TRUE)`. There is no mode. 
+
+  + The values for the **Body_Mass** are `r summary(penguins$body_mass_g)` grams. The mean is `r mean(penguins$body_mass_g, trim = 0, na.rm = TRUE)` and median is `r median(penguins$body_mass_g, trim = 0, na.rm = TRUE)`. There is no mode. 
+
+  + The values for the **Flipper_Length** are `r summary(penguins$flipper_length_mm)` mm. The mean is `r mean(penguins$flipper_length_mm, trim = 0, na.rm = TRUE)` and median is `r median(penguins$flipper_length_mm, trim = 0, na.rm = TRUE)`. There is no mode. 
+
+  + The years column contains the following: `r round(summary(penguins$year))`.
+
+This code chunk below generates a scatter plot contrasting **Flipper Length** and **Bill Length**. 
+
+```{r scatter_plot_df}
+ggplot(penguins, aes( x = bill_length_mm, y = flipper_length_mm, color = species)) + geom_point() + labs(title = "Bill and Flipper length", xlab = "Bill Length (mm)", ylab = "Flipper Length (mm)")
+ggsave("scatter_plot.pdf", height = 4, width = 6)
+```
+
+
+
